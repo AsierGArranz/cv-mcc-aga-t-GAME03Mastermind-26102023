@@ -11,28 +11,40 @@ import java.util.List;
 import java.util.Random;
 
 public class VentanaGame extends JFrame {
-	// TODO: VARIABLES
+
+	// env Variables
 	private static final long serialVersionUID = 1L;
-	private List<Color[]> historialSeleccion;
 	public int numBotones = 6;
 	public int numIntentos = 10;
 	public int numSeleccion = 4;
-	public JButton[] seleccionColores;
-	private Color[] combinacionMaestra;
-	private JLabel colorSeleccionadoLabel;
-	private Color[] coloresSeleccionados;
+
+	// Counters
 	private int colorSeleccionadoIndex;
 	private int intentosRestantes;
+
+	// JFame variables
+	public JButton[] seleccionColores;
+	private JLabel colorSeleccionadoLabel;
 	private JPanel historialColoresPanel;
+
+	// refactorizado
+	private CombinacionMaestra combinacionMaestra;
+	private HistorialSeleccion historialSeleccion;
+
+	// process
+	private Color[] coloresSeleccionados;
 	private JPanel colorSeleccionadoPanel;
 
-	public VentanaGame() {		
+	public VentanaGame() {
+
+		combinacionMaestra = new CombinacionMaestra(numSeleccion);
+		historialSeleccion = new HistorialSeleccion();
+
 		getContentPane().setLayout(null);
 		setTitle("MasterMind");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(400, 400);
-		
-		historialSeleccion = new ArrayList<Color[]>();
+
 		seleccionColores = new JButton[numBotones];
 		coloresSeleccionados = new Color[numBotones];
 		colorSeleccionadoIndex = 0;
@@ -44,36 +56,48 @@ public class VentanaGame extends JFrame {
 		getContentPane().add(colorSeleccionadoLabel);
 
 		colorSeleccionadoPanel = new JPanel();
-		colorSeleccionadoPanel.setBounds(114, 46, 144, 25); // Ajusta la posición y el tamaño del panel
-		colorSeleccionadoPanel.setLayout(new GridLayout(1, numSeleccion)); // Distribuye los colores seleccionados
-						
+		colorSeleccionadoPanel.setBounds(114, 46, 144, 25);
+		colorSeleccionadoPanel.setLayout(new GridLayout(1, numSeleccion));
+
 		historialColoresPanel = new JPanel();
 		historialColoresPanel.setLayout(new BoxLayout(historialColoresPanel, BoxLayout.Y_AXIS));
-		historialColoresPanel.setBounds(10,150,147,322);
+		historialColoresPanel.setBounds(10, 150, 147, 322);
 		getContentPane().add(historialColoresPanel);
-		
-		
+
 		getContentPane().add(colorSeleccionadoPanel);
 
 		JButton btnBorrar = new JButton("Borrar");
-		btnBorrar.setBounds(30 * (numBotones + 1), 10, 80, 25);// Aqui se establece la posicion
+		btnBorrar.setBounds(30 * (numBotones + 1), 10, 80, 25);
 		getContentPane().add(btnBorrar);
 
 		JButton btnAdivinar = new JButton("Adivinar");
 		btnAdivinar.setBounds(294, 10, 80, 25);
 		getContentPane().add(btnAdivinar);
 
-		btnBorrar.addActionListener(new ActionListener() {
+		
+		ActionListener clickBorrarAl = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 				coloresSeleccionados = new Color[numBotones];
 				colorSeleccionadoIndex = 0;
 				actualizarEtiquetaColorSeleccionado();
 			}
-		});
+		};
+		
+		btnBorrar.addActionListener(clickBorrarAl);
 
-		combinacionMaestra = generarCombinacionMaestra();
-		System.out.println("Combinación maestra: " + Arrays.toString(combinacionMaestra));
+		System.out.println("Combinación maestra: " + combinacionMaestra.toString());
+
+		ActionListener btnNewButtonAl = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (colorSeleccionadoIndex < numSeleccion) {
+					JButton botonPresionado = (JButton) e.getSource();
+					Color colorBoton = botonPresionado.getBackground();
+					coloresSeleccionados[colorSeleccionadoIndex] = colorBoton;
+					colorSeleccionadoIndex++;
+					actualizarEtiquetaColorSeleccionado();
+				}
+			}
+		};
 
 		for (int i = 0; i < numBotones; i++) {
 			JButton btnNewButton = new JButton();
@@ -82,22 +106,12 @@ public class VentanaGame extends JFrame {
 			getContentPane().add(btnNewButton);
 			seleccionColores[i] = btnNewButton;
 
-			btnNewButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					if (colorSeleccionadoIndex < numSeleccion) {
-						JButton botonPresionado = (JButton) e.getSource();
-						Color colorBoton = botonPresionado.getBackground();
-						coloresSeleccionados[colorSeleccionadoIndex] = colorBoton;
-						colorSeleccionadoIndex++;
-						actualizarEtiquetaColorSeleccionado();
-					}
-				}
-			});
+			btnNewButton.addActionListener(btnNewButtonAl);
 		}
 
-		btnAdivinar.addActionListener(new ActionListener() {
+		ActionListener btnAdivinarAl = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (Arrays.equals(coloresSeleccionados, combinacionMaestra)) {
+				if (Arrays.equals(coloresSeleccionados, combinacionMaestra.getCombinacion())) {
 					JOptionPane.showMessageDialog(null, "¡Has adivinado la combinación!", "¡Felicidades!",
 							JOptionPane.INFORMATION_MESSAGE);
 				} else {
@@ -111,28 +125,30 @@ public class VentanaGame extends JFrame {
 								JOptionPane.WARNING_MESSAGE);
 					}
 				}
+
 				historialSeleccion.add(Arrays.copyOf(coloresSeleccionados, coloresSeleccionados.length));
 				llenarHistorial();
 				coloresSeleccionados = new Color[numBotones];
 				colorSeleccionadoIndex = 0;
 				actualizarEtiquetaColorSeleccionado();
 			}
-		});
+		};
+
+		btnAdivinar.addActionListener(btnAdivinarAl);
 	}
 
-	// TODO
 	private void llenarHistorial() {
 		JPanel historialPanel = new JPanel();
-		historialPanel.setLayout(new BoxLayout(historialPanel, BoxLayout.Y_AXIS)); 
-		
-		for (Color[] seleccion : historialSeleccion) {
+		historialPanel.setLayout(new BoxLayout(historialPanel, BoxLayout.Y_AXIS));
+
+		for (Color[] seleccion : historialSeleccion.getHistorial()) {
 			JPanel colorPanel = new JPanel();
 			for (Color color : seleccion) {
 				if (color != null) {
 					JPanel colorSeleccionado = new JPanel();
 					colorSeleccionado.setBackground(color);
 					colorSeleccionado.setPreferredSize(new Dimension(25, 25));
-					colorPanel.add(colorSeleccionado);					
+					colorPanel.add(colorSeleccionado);
 				}
 			}
 			historialPanel.add(colorPanel);
@@ -141,7 +157,6 @@ public class VentanaGame extends JFrame {
 		historialColoresPanel.add(historialPanel);
 	}
 
-	
 	private void actualizarEtiquetaColorSeleccionado() {
 		colorSeleccionadoPanel.removeAll(); // Limpiamos el panel antes de agregar los colores seleccionados
 
@@ -156,16 +171,11 @@ public class VentanaGame extends JFrame {
 			}
 		}
 
-		Class<?> tipoObjeto = colorSeleccionadoPanel.getClass();
-		System.out.println(tipoObjeto);
-
-		// TODO ARRAYLIST COLORSELECCIONADO
-		
-		colorSeleccionadoPanel.revalidate(); // Volvemos a validar el panel para que se muestren los cambios
-		colorSeleccionadoPanel.repaint(); // Repintamos el panel
+		colorSeleccionadoPanel.revalidate();
+		colorSeleccionadoPanel.repaint();
 	}
 
-	private Color obtenerColor(int indice) {// Aqui se almacena los colores posibles
+	private Color obtenerColor(int indice) {
 		switch (indice) {
 		case 1:
 			return Color.RED;
@@ -192,26 +202,4 @@ public class VentanaGame extends JFrame {
 		}
 	}
 
-	private Color[] generarCombinacionMaestra() {
-		Random random = new Random();
-		Color[] combinacion = new Color[numSeleccion];
-		for (int i = 0; i < numSeleccion; i++) {
-			int colorIndex = random.nextInt(numBotones);
-			combinacion[i] = obtenerColor(colorIndex + 1);
-		}
-		return combinacion;
-	}
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaGame frame = new VentanaGame();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 }
