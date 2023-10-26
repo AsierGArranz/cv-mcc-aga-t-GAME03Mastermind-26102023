@@ -7,14 +7,14 @@ import java.util.Random;
 
 public class VentanaJuego extends JFrame {
     private int numColores = 6;
-    private int numFichas = 4;  
+    private int numFichas = 4; 
     private int intentosMaximos = 10; 
 
     private int[] codigoSecreto;
     private int numIntentos;
     private int intentosRestantes;
 
-    private JButton[] seleccionColores;
+    private JButton[] seleccionColores,coloresSeleccionados;
     private JButton botonComprobar;
     private JLabel resultadoLabel;
     private JPanel panelJuego;
@@ -37,7 +37,9 @@ public class VentanaJuego extends JFrame {
         botonComprobar = new JButton("Comprobar");
 
         seleccionColores = new JButton[numColores];
-
+        coloresSeleccionados = new JButton[numColores];
+        
+        
         for (int i = 0; i < numColores; i++) {
             seleccionColores[i] = new JButton();
             seleccionColores[i].setBackground(obtenerColor(i));
@@ -97,8 +99,18 @@ public class VentanaJuego extends JFrame {
                 return Color.GRAY;
         }
     }
-
+    
+    private int[] intentoActual = new int[numFichas];
     private void seleccionarColor(int color) {
+    	if(numIntentos<intentosMaximos) {
+    		intentoActual[numIntentos] = color;
+    		coloresSeleccionados[numIntentos].setBackground(obtenerColor(color));
+        	panelSeleccion.add(coloresSeleccionados[numIntentos]);
+    		numIntentos++;
+        	if(numIntentos == numFichas) {
+        		botonComprobar.setEnabled(true);
+        	}
+    	}
     	
     }
 
