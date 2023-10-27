@@ -31,10 +31,7 @@ public class HistorialSeleccion {
         resultados.clear();
     }
     
-    public void verificarSolucion() {
-    	
-    }
-
+   
     public void mostrarHistorial() {
     	System.out.print(":3");
         for (int i = 0; i < historial.size(); i++) {
