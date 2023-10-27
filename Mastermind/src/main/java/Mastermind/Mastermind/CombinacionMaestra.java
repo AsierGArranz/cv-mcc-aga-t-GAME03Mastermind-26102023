@@ -38,6 +38,7 @@ class CombinacionMaestra {
         for (int i = 0; i < numColores; i++) {
             int colorIndex = random.nextInt(numColores) + 1;
             combinacion[i] = obtenerColor(colorIndex);
+            System.out.println(obtenerColorName(colorIndex));
         }
 
         return combinacion;
@@ -67,6 +68,32 @@ class CombinacionMaestra {
                 return Color.DARK_GRAY;
             default:
                 return Color.GRAY;
+        }
+    }
+    private String obtenerColorName(int indice) {
+        switch (indice) {
+            case 1:
+                return "Red";
+            case 2:
+                return "Blue";
+            case 3:
+                return "Green";
+            case 4:
+                return "Yellow";
+            case 5:
+                return "Orange";
+            case 6:
+                return "Pink";
+            case 7:
+                return "Black";
+            case 8:
+                return "Cyan";
+            case 9:
+                return "Magenta";
+            case 10:
+                return "Dark Gray";
+            default:
+                return "Gray";
         }
     }
 

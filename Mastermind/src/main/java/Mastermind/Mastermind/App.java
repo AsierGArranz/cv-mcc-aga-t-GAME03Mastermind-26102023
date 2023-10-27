@@ -11,7 +11,7 @@ public class App {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					VentanaGame frame = new VentanaGame();
+					VistaDificultad frame = new VistaDificultad();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
