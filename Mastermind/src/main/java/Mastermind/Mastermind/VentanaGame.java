@@ -36,8 +36,9 @@ public class VentanaGame extends JFrame {
 	private Color[] coloresSeleccionados;
 	private JPanel colorSeleccionadoPanel;
 
-	public VentanaGame() {
-
+	public VentanaGame(int numSeleccion, int numIntentos) {
+        this.numSeleccion = numSeleccion;
+        this.numIntentos = numIntentos;
 		combinacionMaestra = new CombinacionMaestra(numSeleccion);
 		historialSeleccion = new HistorialSeleccion();
 
@@ -103,6 +104,7 @@ public class VentanaGame extends JFrame {
 		for (int i = 0; i < numSeleccion; i++) {
 			JButton btnNewButton = new JButton();
 			btnNewButton.setBounds(30 * (i + 1), 10, 25, 25);
+			
 			btnNewButton.setBackground(obtenerColor(i + 1));
 			getContentPane().add(btnNewButton);
 			seleccionColores[i] = btnNewButton;
