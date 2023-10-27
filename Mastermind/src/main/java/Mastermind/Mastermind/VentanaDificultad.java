@@ -5,11 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class VentanaDificultad extends JFrame {
-
-    public VentanaDificultad() {
+	private static final long serialVersionUID = 1L;
+	public VentanaDificultad() {
+		// Establecer formato ventana 
         setTitle("Seleccionar Dificultad");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 150);
+        setLocationRelativeTo(null);
 
         // Crear un panel para los botones
         JPanel panel = new JPanel();
@@ -23,6 +25,7 @@ public class VentanaDificultad extends JFrame {
         panel.add(btnPrincipiante);
         panel.add(btnMedio);
         panel.add(btnDificil);
+        
 
         // Agregar el panel a la ventana
         getContentPane().add(panel);
@@ -33,10 +36,8 @@ public class VentanaDificultad extends JFrame {
                 abrirVentanaGame(4, 10);
             }
         };
-        
         btnPrincipiante.addActionListener(btnPrincipianteAl);
 
-        
         ActionListener btnMedioAl = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 abrirVentanaGame(5, 8);
