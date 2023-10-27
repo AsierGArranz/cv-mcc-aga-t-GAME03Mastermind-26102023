@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.Random;
 
-public class CombinacionMaestra {
-	private Color[] combinacion;
+class CombinacionMaestra {
+    private Color[] combinacion;
 
     public CombinacionMaestra(int numColores) {
         combinacion = generarCombinacion(numColores);
@@ -15,12 +15,28 @@ public class CombinacionMaestra {
         return combinacion;
     }
 
+    public Color[] comprobarAdivinanza(Color[] suposicion) {
+        Color[] resultado = new Color[suposicion.length];
+
+        for (int i = 0; i < suposicion.length; i++) {
+            if (suposicion[i].equals(combinacion[i])) {
+                resultado[i] = Color.BLACK;
+            } else if (Arrays.asList(combinacion).contains(suposicion[i])) {
+                resultado[i] = Color.WHITE;
+            } else {
+                resultado[i] = null;
+            }
+        }
+
+        return resultado;
+    }
+
     private Color[] generarCombinacion(int numColores) {
         Color[] combinacion = new Color[numColores];
         Random random = new Random();
 
         for (int i = 0; i < numColores; i++) {
-            int colorIndex = random.nextInt(numColoresPosibles());
+            int colorIndex = random.nextInt(numColores) + 1;
             combinacion[i] = obtenerColor(colorIndex);
         }
 
@@ -53,12 +69,5 @@ public class CombinacionMaestra {
                 return Color.GRAY;
         }
     }
-    
-    public String toString() {
-        return Arrays.toString(combinacion);
-    }
 
-    private int numColoresPosibles() {
-        return 10;
-    }
 }
