@@ -17,7 +17,7 @@ public class VentanaGame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	public int numSeleccion = 4;
 	public int numIntentos = 10;
-
+	private boolean sinIntentos = false;
 	// Counters
 	private int colorSeleccionadoIndex;
 	private int intentosRestantes;
@@ -26,6 +26,8 @@ public class VentanaGame extends JFrame {
 	public JButton[] seleccionColores;
 	private JLabel colorSeleccionadoLabel;
 	private JPanel historialColoresPanel;
+	private JLabel intentosRestantesLabel;
+
 	
 	// TODO: VARS
 	// refactorizado
@@ -45,13 +47,18 @@ public class VentanaGame extends JFrame {
 		getContentPane().setLayout(null);
 		setTitle("MasterMind");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(400, 400);
+		setSize(600, 600);
 
 		seleccionColores = new JButton[numSeleccion];
 		coloresSeleccionados = new Color[numSeleccion];
 		colorSeleccionadoIndex = 0;
 		intentosRestantes = numIntentos;
 
+		intentosRestantesLabel = new JLabel("Intentos restantes: " + intentosRestantes);
+		intentosRestantesLabel.setBounds(294, 46, 150, 25);
+		getContentPane().add(intentosRestantesLabel);
+
+		
 		colorSeleccionadoLabel = new JLabel();
 		colorSeleccionadoLabel.setBounds(10, 46, 300, 25);
 		colorSeleccionadoLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -63,7 +70,7 @@ public class VentanaGame extends JFrame {
 
 		historialColoresPanel = new JPanel();
 		historialColoresPanel.setLayout(new BoxLayout(historialColoresPanel, BoxLayout.Y_AXIS));
-		historialColoresPanel.setBounds(40, 95, 300, 322);
+		historialColoresPanel.setBounds(40, 95, 358, 322);
 		getContentPane().add(historialColoresPanel);
 
 		getContentPane().add(colorSeleccionadoPanel);
@@ -76,6 +83,15 @@ public class VentanaGame extends JFrame {
 		btnAdivinar.setBounds(294, 10, 80, 25);
 		getContentPane().add(btnAdivinar);
 
+		JButton btnVolver = new JButton("Seleccionar dificultad");
+		btnVolver.setBounds(383, 10, 160, 25);
+		getContentPane().add(btnVolver);
+		
+		btnVolver.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        volverAVistaDificultad();
+		    }
+		});
 		
 		ActionListener clickBorrarAl = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -104,7 +120,7 @@ public class VentanaGame extends JFrame {
 		for (int i = 0; i < numSeleccion; i++) {
 			JButton btnNewButton = new JButton();
 			btnNewButton.setBounds(30 * (i + 1), 10, 25, 25);
-			
+			btnNewButton.setBorder(new LineBorder(Color.LIGHT_GRAY)); // Agrega un borde negro al panel
 			btnNewButton.setBackground(obtenerColor(i + 1));
 			getContentPane().add(btnNewButton);
 			seleccionColores[i] = btnNewButton;
@@ -113,32 +129,38 @@ public class VentanaGame extends JFrame {
 		}
 
 		ActionListener btnAdivinarAl = new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (colorSeleccionadoIndex < numSeleccion) {
-                    JOptionPane.showMessageDialog(null, "Completa la selección de colores antes de adivinar.", "Error", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                //  TODO: ACTTION
-                calcularResultadoAdivinanza();
+		    public void actionPerformed(ActionEvent e) {
+		        if (colorSeleccionadoIndex < numSeleccion) {
+		            JOptionPane.showMessageDialog(null, "Completa la selección de colores antes de adivinar.", "Error", JOptionPane.ERROR_MESSAGE);
+		            return;
+		        }
 
-                if (Arrays.equals(coloresSeleccionados, combinacionMaestra.getCombinacion())) {
-                    JOptionPane.showMessageDialog(null, "¡Has adivinado la combinación!", "¡Felicidades!", JOptionPane.INFORMATION_MESSAGE);
-                } else {
-                    intentosRestantes--;
-                    if (intentosRestantes == 0) {
-                        JOptionPane.showMessageDialog(null, "¡Te has quedado sin intentos!", "Juego Terminado", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Combinación incorrecta. Intentos restantes: " + intentosRestantes, "Intento Fallido", JOptionPane.WARNING_MESSAGE);
-                    }
-                }
-                
-                printHistorial();
+		        if (!sinIntentos) {
+		            calcularResultadoAdivinanza();
 
-                coloresSeleccionados = new Color[numSeleccion];
-                colorSeleccionadoIndex = 0;
-                actualizarEtiquetaColorSeleccionado();
-            }
-        };
+		            if (Arrays.equals(coloresSeleccionados, combinacionMaestra.getCombinacion())) {
+		                JOptionPane.showMessageDialog(null, "¡Has adivinado la combinación!", "¡Felicidades!", JOptionPane.INFORMATION_MESSAGE);
+	                    btnAdivinar.setEnabled(false); // Deshabilita el botón "Adivinar"
+		            } else {
+		                intentosRestantes--;
+		                if (intentosRestantes == 0) {
+		                    sinIntentos = true; // Sin intentos restantes
+		                    btnAdivinar.setEnabled(false); // Deshabilita el botón "Adivinar"
+		                    JOptionPane.showMessageDialog(null, "¡Te has quedado sin intentos!", "Juego Terminado", JOptionPane.ERROR_MESSAGE);
+		                } else {
+		                    JOptionPane.showMessageDialog(null, "Combinación incorrecta. Intentos restantes: " + intentosRestantes, "Intento Fallido", JOptionPane.WARNING_MESSAGE);
+		                }
+		            }
+		            intentosRestantesLabel.setText("Intentos restantes: " + intentosRestantes);
+		            printHistorial();
+
+		            coloresSeleccionados = new Color[numSeleccion];
+		            colorSeleccionadoIndex = 0;
+		            actualizarEtiquetaColorSeleccionado();
+		        }
+		    }
+		};
+
 
         btnAdivinar.addActionListener(btnAdivinarAl);
 	}
@@ -159,6 +181,7 @@ public class VentanaGame extends JFrame {
 	            if (color != null) {
 	                JPanel colorSeleccionado = new JPanel();
 	                colorSeleccionado.setBackground(color);
+	                colorSeleccionado.setBorder(new LineBorder(Color.BLACK)); // Agrega un borde negro al panel
 	                colorSeleccionado.setPreferredSize(new Dimension(25, 25));
 	                colorSeleccionado.setMaximumSize(new Dimension(25, 25)); // Añade esta línea
 	                colorSeleccionado.setMinimumSize(new Dimension(25, 25)); // Añade esta línea
@@ -166,6 +189,8 @@ public class VentanaGame extends JFrame {
 	            }
 	        }
 	        historialColores.add(colorPanel);
+	        historialColores.add(Box.createRigidArea(new Dimension(0,10)));
+	        
 	    }
 
 	    JPanel blancoNegroColores = new JPanel(); // Panel para los colores blanco/negro
@@ -180,6 +205,7 @@ public class VentanaGame extends JFrame {
 	            if (color != null) {
 	                JPanel colorSeleccionado = new JPanel();
 	                colorSeleccionado.setBackground(color);
+	                colorSeleccionado.setBorder(new LineBorder(Color.LIGHT_GRAY)); // Agrega un borde negro al panel
 	                colorSeleccionado.setPreferredSize(new Dimension(25, 25));
 	                colorSeleccionado.setMaximumSize(new Dimension(25, 25)); // Añade esta línea
 	                colorSeleccionado.setMinimumSize(new Dimension(25, 25)); // Añade esta línea
@@ -187,6 +213,7 @@ public class VentanaGame extends JFrame {
 	            }
 	        }
 	        blancoNegroColores.add(colorPanel);
+	        blancoNegroColores.add(Box.createRigidArea(new Dimension(0,10)));
 	    }
 
 	    historialPanel.add(historialColores);
@@ -199,21 +226,20 @@ public class VentanaGame extends JFrame {
 
 
 	private void actualizarEtiquetaColorSeleccionado() {
-		colorSeleccionadoPanel.removeAll(); // Limpiamos el panel antes de agregar los colores seleccionados
+	    colorSeleccionadoPanel.removeAll(); // Limpiar el panel antes de agregar los colores seleccionados
 
-		for (Color color : coloresSeleccionados) {
-			if (color != null) {
-				JPanel colorPanel = new JPanel();
-				colorPanel.setBackground(color);
-				colorPanel.setPreferredSize(new Dimension(25, 25)); // Ajusta el tamaño de los colores seleccionados
-				JLabel spacio = new JLabel(" ");
-				colorSeleccionadoPanel.add(colorPanel);
-				colorSeleccionadoPanel.add(spacio);
-			}
-		}
+	    for (Color color : coloresSeleccionados) {
+	        if (color != null) {
+	            JPanel colorPanel = new JPanel();
+	            colorPanel.setBackground(color);
+	            colorPanel.setBorder(new LineBorder(Color.BLACK)); // Agrega un borde negro al panel
+	            colorPanel.setPreferredSize(new Dimension(25, 25)); // Establece el tamaño cuadrado
+	            colorSeleccionadoPanel.add(colorPanel);
+	        }
+	    }
 
-		colorSeleccionadoPanel.revalidate();
-		colorSeleccionadoPanel.repaint();
+	    colorSeleccionadoPanel.revalidate();
+	    colorSeleccionadoPanel.repaint();
 	}
 
 	private Color obtenerColor(int indice) {
@@ -238,6 +264,8 @@ public class VentanaGame extends JFrame {
 			return Color.MAGENTA;
 		case 10:
 			return Color.DARK_GRAY;
+		case 11:
+			return Color.LIGHT_GRAY;
 		default:
 			return Color.GRAY;
 		}
@@ -268,6 +296,14 @@ public class VentanaGame extends JFrame {
 
 	    historialSeleccion.add(Arrays.copyOf(coloresSeleccionados, coloresSeleccionados.length), resultado);
 	}
+	
+	
+	private void volverAVistaDificultad() {
+	    VistaDificultad vistaDificultad = new VistaDificultad();
+	    vistaDificultad.setVisible(true);
+	    dispose(); // Cierra la ventana actual
+	}
+	
 
 
 }
