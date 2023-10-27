@@ -1,19 +1,22 @@
 package Mastermind.Mastermind;
 
-import javax.swing.SwingUtilities;
+import java.awt.EventQueue;
 
-public class App 
-{
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
-        System.out.println( "Hello World2!" );
-        
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new VentanaJuego().setVisible(true);
-            }
-        });
-    }
+/**
+ * Hello world!
+ *
+ */
+public class App {
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					VentanaDificultad frame = new VentanaDificultad();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 }
