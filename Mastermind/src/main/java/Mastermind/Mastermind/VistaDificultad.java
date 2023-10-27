@@ -36,13 +36,13 @@ public class VistaDificultad extends JFrame {
 
         btnMedio.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                abrirVentanaGame(5, 9);
+                abrirVentanaGame(5, 8);
             }
         });
 
         btnDificil.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                abrirVentanaGame(6, 8);
+                abrirVentanaGame(6, 6);
             }
         });
     }
