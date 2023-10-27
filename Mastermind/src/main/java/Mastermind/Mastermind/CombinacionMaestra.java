@@ -6,9 +6,13 @@ import java.util.Random;
 
 class CombinacionMaestra {
     private Color[] combinacion;
+    private Color[] coloresPersonalizar;
 
-    public CombinacionMaestra(int numColores) {
-        combinacion = generarCombinacion(numColores);
+   
+    
+    public CombinacionMaestra(Color[] coloresPersonalizar) {
+        this.coloresPersonalizar = coloresPersonalizar; // Asigna la matriz recibida a la variable de instancia
+        combinacion = generarCombinacion(coloresPersonalizar.length);
     }
 
     public Color[] getCombinacion() {
@@ -36,14 +40,14 @@ class CombinacionMaestra {
         Random random = new Random();
 
         for (int i = 0; i < numColores; i++) {
-            int colorIndex = random.nextInt(numColores) + 1;
-            combinacion[i] = obtenerColor(colorIndex);
-            System.out.println(obtenerColorName(colorIndex));
+            int colorIndex = random.nextInt(numColores);
+            combinacion[i] = coloresPersonalizar[colorIndex]; 
         }
 
         return combinacion;
     }
 
+/*
     private Color obtenerColor(int indice) {
         switch (indice) {
             case 1:
@@ -96,5 +100,6 @@ class CombinacionMaestra {
                 return "Gray";
         }
     }
+    */
 
 }

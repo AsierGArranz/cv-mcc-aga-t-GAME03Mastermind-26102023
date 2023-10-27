@@ -28,20 +28,24 @@ public class VentanaGame extends JFrame {
 	private JPanel historialColoresPanel;
 	private JLabel intentosRestantesLabel;
 
-	
-	// TODO: VARS
 	// refactorizado
 	private CombinacionMaestra combinacionMaestra;
 	private HistorialSeleccion historialSeleccion;
 
 	// process
-	private Color[] coloresSeleccionados;
+	public Color[] coloresSeleccionados;
 	private JPanel colorSeleccionadoPanel;
-
+	
+	public Color[] coloresPersonalizar;
+	
+    private boolean personalizarColoresHabilitado = false;
+    
 	public VentanaGame(int numSeleccion, int numIntentos) {
-        this.numSeleccion = numSeleccion;
+
+		this.numSeleccion = numSeleccion;
         this.numIntentos = numIntentos;
-		combinacionMaestra = new CombinacionMaestra(numSeleccion);
+        coloresPersonalizar = new Color[numSeleccion];
+
 		historialSeleccion = new HistorialSeleccion();
 
 		getContentPane().setLayout(null);
@@ -55,7 +59,7 @@ public class VentanaGame extends JFrame {
 		intentosRestantes = numIntentos;
 
 		intentosRestantesLabel = new JLabel("Intentos restantes: " + intentosRestantes);
-		intentosRestantesLabel.setBounds(294, 46, 150, 25);
+		intentosRestantesLabel.setBounds(393, 72, 150, 25);
 		getContentPane().add(intentosRestantesLabel);
 
 		
@@ -82,16 +86,52 @@ public class VentanaGame extends JFrame {
 		JButton btnAdivinar = new JButton("Adivinar");
 		btnAdivinar.setBounds(294, 10, 80, 25);
 		getContentPane().add(btnAdivinar);
+		
+		
+		JButton btnReiniciar = new JButton("Reiniciar");
+		btnReiniciar.setBounds(408, 108, 91, 25); // Ajusta la posición y tamaño según tus preferencias
+		getContentPane().add(btnReiniciar);
 
+		ActionListener btnReinicarAl = new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+				btnAdivinar.setEnabled(true);
+		        reiniciarJuego();
+		    }
+		};
+		
+		btnReiniciar.addActionListener(btnReinicarAl);
+		
 		JButton btnVolver = new JButton("Seleccionar dificultad");
 		btnVolver.setBounds(383, 10, 160, 25);
 		getContentPane().add(btnVolver);
-		
-		btnVolver.addActionListener(new ActionListener() {
+	
+		JButton btnPersonalizarColores = new JButton("Personalizar Colores");
+        btnPersonalizarColores.setBounds(383, 46, 160, 25);
+        getContentPane().add(btnPersonalizarColores);
+        
+        ActionListener btnVolverAl = new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        volverAVistaDificultad();
 		    }
-		});
+		};
+        
+		btnVolver.addActionListener(btnVolverAl);
+		
+		
+		ActionListener btnPersonalizarColoresAl = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (personalizarColoresHabilitado) {
+                	reiniciarJuego();
+    				btnAdivinar.setEnabled(true);
+                    abrirVentanaOpciones();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Juega al menos una vez antes de personalizar colores.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        };
+
+		btnPersonalizarColores.addActionListener(btnPersonalizarColoresAl);
+		
 		
 		ActionListener clickBorrarAl = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -102,9 +142,8 @@ public class VentanaGame extends JFrame {
 		};
 		
 		btnBorrar.addActionListener(clickBorrarAl);
-
-		System.out.println("Combinación maestra: " + combinacionMaestra.toString());
-
+		
+		
 		ActionListener btnNewButtonAl = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (colorSeleccionadoIndex < numSeleccion) {
@@ -122,12 +161,14 @@ public class VentanaGame extends JFrame {
 			btnNewButton.setBounds(30 * (i + 1), 10, 25, 25);
 			btnNewButton.setBorder(new LineBorder(Color.LIGHT_GRAY)); // Agrega un borde negro al panel
 			btnNewButton.setBackground(obtenerColor(i + 1));
+			coloresPersonalizar[i] = obtenerColor(i + 1);
 			getContentPane().add(btnNewButton);
 			seleccionColores[i] = btnNewButton;
 
 			btnNewButton.addActionListener(btnNewButtonAl);
 		}
-
+		combinacionMaestra = new CombinacionMaestra(coloresPersonalizar);
+		
 		ActionListener btnAdivinarAl = new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        if (colorSeleccionadoIndex < numSeleccion) {
@@ -140,12 +181,14 @@ public class VentanaGame extends JFrame {
 
 		            if (Arrays.equals(coloresSeleccionados, combinacionMaestra.getCombinacion())) {
 		                JOptionPane.showMessageDialog(null, "¡Has adivinado la combinación!", "¡Felicidades!", JOptionPane.INFORMATION_MESSAGE);
-	                    btnAdivinar.setEnabled(false); // Deshabilita el botón "Adivinar"
+	                    personalizarColoresHabilitado=true;
+		                btnAdivinar.setEnabled(false); // Deshabilita el botón "Adivinar"
 		            } else {
 		                intentosRestantes--;
 		                if (intentosRestantes == 0) {
 		                    sinIntentos = true; // Sin intentos restantes
 		                    btnAdivinar.setEnabled(false); // Deshabilita el botón "Adivinar"
+		                    personalizarColoresHabilitado=true;
 		                    JOptionPane.showMessageDialog(null, "¡Te has quedado sin intentos!", "Juego Terminado", JOptionPane.ERROR_MESSAGE);
 		                } else {
 		                    JOptionPane.showMessageDialog(null, "Combinación incorrecta. Intentos restantes: " + intentosRestantes, "Intento Fallido", JOptionPane.WARNING_MESSAGE);
@@ -163,6 +206,34 @@ public class VentanaGame extends JFrame {
 
 
         btnAdivinar.addActionListener(btnAdivinarAl);
+	}
+	
+	public void printButtonColors() {
+		ActionListener btnNewButtonAl = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (colorSeleccionadoIndex < numSeleccion) {
+					JButton botonPresionado = (JButton) e.getSource();
+					Color colorBoton = botonPresionado.getBackground();
+					coloresSeleccionados[colorSeleccionadoIndex] = colorBoton;
+					colorSeleccionadoIndex++;
+					actualizarEtiquetaColorSeleccionado();
+				}
+			}
+		};
+
+
+		
+		for (int i = 0; i < numSeleccion; i++) {
+			JButton btnNewButton = new JButton();
+			btnNewButton.setBounds(30 * (i + 1), 10, 25, 25);
+			btnNewButton.setBorder(new LineBorder(Color.LIGHT_GRAY)); // Agrega un borde negro al panel
+			btnNewButton.setBackground(obtenerColor(i + 1));
+			coloresPersonalizar[i] = obtenerColor(i + 1);
+			getContentPane().add(btnNewButton);
+			seleccionColores[i] = btnNewButton;
+
+			btnNewButton.addActionListener(btnNewButtonAl);
+		}
 	}
 
 	private void printHistorial() {
@@ -299,11 +370,53 @@ public class VentanaGame extends JFrame {
 	
 	
 	private void volverAVistaDificultad() {
-	    VistaDificultad vistaDificultad = new VistaDificultad();
+	    VentanaDificultad vistaDificultad = new VentanaDificultad();
 	    vistaDificultad.setVisible(true);
 	    dispose(); // Cierra la ventana actual
 	}
 	
+	private void abrirVentanaOpciones() {
+        VentanaSeleccionColor ventanaOpciones = new VentanaSeleccionColor(this);
+        ventanaOpciones.setVisible(true);
+    }
+	public void actualizarColoresPersonalizados() {
+		for (int i = 0; i < seleccionColores.length; i++) {
+			seleccionColores[i].setBackground(coloresPersonalizar[i]); 
+		}
+		
+	    combinacionMaestra = new CombinacionMaestra(coloresPersonalizar);
+	}
+	
+
+	public void habilitarOpcionPersonalizarColores(boolean habilitar) {
+	    personalizarColoresHabilitado = habilitar;
+	}
+	
+	
+	private void reiniciarJuego() {
+	    // Restablecer las variables
+	    colorSeleccionadoIndex = 0;
+	    intentosRestantes = numIntentos;
+	    sinIntentos = false;
+	    coloresSeleccionados = new Color[numSeleccion];
+	    actualizarEtiquetaColorSeleccionado();
+	    historialSeleccion.limpiarHistorial();
+	    intentosRestantesLabel.setText("Intentos restantes: " + intentosRestantes);
+
+	    // Reiniciar la combinación maestra
+	    if (personalizarColoresHabilitado)
+	        actualizarColoresPersonalizados();
+	    else
+	        combinacionMaestra = new CombinacionMaestra(coloresPersonalizar);
+	    
+	    // Limpiar el historial en la ventana
+	    historialColoresPanel.removeAll();
+	    historialColoresPanel.revalidate();
+	    historialColoresPanel.repaint();
+
+	    // Habilitar el botón "Adivinar" nuevamente
+	    
+	}
 
 
 }

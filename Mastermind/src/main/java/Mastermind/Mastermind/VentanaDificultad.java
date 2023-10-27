@@ -4,9 +4,9 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class VistaDificultad extends JFrame {
+public class VentanaDificultad extends JFrame {
 
-    public VistaDificultad() {
+    public VentanaDificultad() {
         setTitle("Seleccionar Dificultad");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 150);
@@ -28,23 +28,30 @@ public class VistaDificultad extends JFrame {
         getContentPane().add(panel);
 
         // Agregar ActionListener para los botones
-        btnPrincipiante.addActionListener(new ActionListener() {
+        ActionListener btnPrincipianteAl = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 abrirVentanaGame(4, 10);
             }
-        });
+        };
+        
+        btnPrincipiante.addActionListener(btnPrincipianteAl);
 
-        btnMedio.addActionListener(new ActionListener() {
+        
+        ActionListener btnMedioAl = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 abrirVentanaGame(5, 8);
             }
-        });
+        };
+        
+        btnMedio.addActionListener(btnMedioAl);
 
-        btnDificil.addActionListener(new ActionListener() {
+        
+        ActionListener btnDificilAl = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                abrirVentanaGame(6, 6);
+            	abrirVentanaGame(6, 6);
             }
-        });
+        };
+        btnDificil.addActionListener(btnDificilAl);
     }
 
     private void abrirVentanaGame(int numSeleccion, int numIntentos) {
