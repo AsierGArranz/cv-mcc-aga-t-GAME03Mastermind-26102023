@@ -7,16 +7,11 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JPanel;
 
 public class VentanaSeleccionColor extends JFrame {
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private List<JButton> botonesPersonalizar;
     private VentanaGame ventanaGame;
@@ -60,7 +55,7 @@ public class VentanaSeleccionColor extends JFrame {
         
         ActionListener guardarBtnAl = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	// TODO : renovar array de colores coloresPersonalizar
+            	//renovar array de colores coloresPersonalizar
                 ventanaGame.actualizarColoresPersonalizados();
                 dispose();
             }

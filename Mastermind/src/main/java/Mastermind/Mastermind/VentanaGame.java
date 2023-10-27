@@ -1,15 +1,10 @@
 package Mastermind.Mastermind;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 public class VentanaGame extends JFrame {
 
@@ -52,6 +47,7 @@ public class VentanaGame extends JFrame {
 		setTitle("MasterMind");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(600, 600);
+        setLocationRelativeTo(null);
 
 		seleccionColores = new JButton[numSeleccion];
 		coloresSeleccionados = new Color[numSeleccion];
@@ -89,7 +85,7 @@ public class VentanaGame extends JFrame {
 		
 		
 		JButton btnReiniciar = new JButton("Reiniciar");
-		btnReiniciar.setBounds(408, 108, 91, 25); // Ajusta la posición y tamaño según tus preferencias
+		btnReiniciar.setBounds(408, 108, 91, 25); 
 		getContentPane().add(btnReiniciar);
 
 		ActionListener btnReinicarAl = new ActionListener() {
@@ -159,7 +155,7 @@ public class VentanaGame extends JFrame {
 		for (int i = 0; i < numSeleccion; i++) {
 			JButton btnNewButton = new JButton();
 			btnNewButton.setBounds(30 * (i + 1), 10, 25, 25);
-			btnNewButton.setBorder(new LineBorder(Color.LIGHT_GRAY)); // Agrega un borde negro al panel
+			btnNewButton.setBorder(new LineBorder(Color.LIGHT_GRAY)); // Agrega un borde gris al panel
 			btnNewButton.setBackground(obtenerColor(i + 1));
 			coloresPersonalizar[i] = obtenerColor(i + 1);
 			getContentPane().add(btnNewButton);
@@ -186,7 +182,7 @@ public class VentanaGame extends JFrame {
 		            } else {
 		                intentosRestantes--;
 		                if (intentosRestantes == 0) {
-		                    sinIntentos = true; // Sin intentos restantes
+		                    sinIntentos = true; //Sin intentos restantes
 		                    btnAdivinar.setEnabled(false); // Deshabilita el botón "Adivinar"
 		                    personalizarColoresHabilitado=true;
 		                    JOptionPane.showMessageDialog(null, "¡Te has quedado sin intentos!", "Juego Terminado", JOptionPane.ERROR_MESSAGE);
@@ -207,34 +203,6 @@ public class VentanaGame extends JFrame {
 
         btnAdivinar.addActionListener(btnAdivinarAl);
 	}
-	
-	public void printButtonColors() {
-		ActionListener btnNewButtonAl = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (colorSeleccionadoIndex < numSeleccion) {
-					JButton botonPresionado = (JButton) e.getSource();
-					Color colorBoton = botonPresionado.getBackground();
-					coloresSeleccionados[colorSeleccionadoIndex] = colorBoton;
-					colorSeleccionadoIndex++;
-					actualizarEtiquetaColorSeleccionado();
-				}
-			}
-		};
-
-
-		
-		for (int i = 0; i < numSeleccion; i++) {
-			JButton btnNewButton = new JButton();
-			btnNewButton.setBounds(30 * (i + 1), 10, 25, 25);
-			btnNewButton.setBorder(new LineBorder(Color.LIGHT_GRAY)); // Agrega un borde negro al panel
-			btnNewButton.setBackground(obtenerColor(i + 1));
-			coloresPersonalizar[i] = obtenerColor(i + 1);
-			getContentPane().add(btnNewButton);
-			seleccionColores[i] = btnNewButton;
-
-			btnNewButton.addActionListener(btnNewButtonAl);
-		}
-	}
 
 	private void printHistorial() {
 	    JPanel historialPanel = new JPanel();
@@ -247,15 +215,15 @@ public class VentanaGame extends JFrame {
 	    for (Color[] seleccion : historialSeleccion.getHistorial()) {
 	        JPanel colorPanel = new JPanel();
 	        colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.X_AXIS));
-	        colorPanel.setBorder(new LineBorder(Color.BLACK)); // Agrega un borde negro al panel
+	        colorPanel.setBorder(new LineBorder(Color.BLACK));
 	        for (Color color : seleccion) {
 	            if (color != null) {
 	                JPanel colorSeleccionado = new JPanel();
 	                colorSeleccionado.setBackground(color);
-	                colorSeleccionado.setBorder(new LineBorder(Color.BLACK)); // Agrega un borde negro al panel
+	                colorSeleccionado.setBorder(new LineBorder(Color.BLACK));
 	                colorSeleccionado.setPreferredSize(new Dimension(25, 25));
-	                colorSeleccionado.setMaximumSize(new Dimension(25, 25)); // Añade esta línea
-	                colorSeleccionado.setMinimumSize(new Dimension(25, 25)); // Añade esta línea
+	                colorSeleccionado.setMaximumSize(new Dimension(25, 25));
+	                colorSeleccionado.setMinimumSize(new Dimension(25, 25));
 	                colorPanel.add(colorSeleccionado);
 	            }
 	        }
@@ -271,15 +239,15 @@ public class VentanaGame extends JFrame {
 	    for (Color[] resultado : historialSeleccion.getResultados()) {
 	        JPanel colorPanel = new JPanel();
 	        colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.X_AXIS));
-	        colorPanel.setBorder(new LineBorder(Color.BLACK)); // Agrega un borde negro al panel
+	        colorPanel.setBorder(new LineBorder(Color.BLACK));
 	        for (Color color : resultado) {
 	            if (color != null) {
 	                JPanel colorSeleccionado = new JPanel();
 	                colorSeleccionado.setBackground(color);
-	                colorSeleccionado.setBorder(new LineBorder(Color.LIGHT_GRAY)); // Agrega un borde negro al panel
+	                colorSeleccionado.setBorder(new LineBorder(Color.LIGHT_GRAY));
 	                colorSeleccionado.setPreferredSize(new Dimension(25, 25));
-	                colorSeleccionado.setMaximumSize(new Dimension(25, 25)); // Añade esta línea
-	                colorSeleccionado.setMinimumSize(new Dimension(25, 25)); // Añade esta línea
+	                colorSeleccionado.setMaximumSize(new Dimension(25, 25));
+	                colorSeleccionado.setMinimumSize(new Dimension(25, 25));
 	                colorPanel.add(colorSeleccionado);
 	            }
 	        }
@@ -303,7 +271,7 @@ public class VentanaGame extends JFrame {
 	        if (color != null) {
 	            JPanel colorPanel = new JPanel();
 	            colorPanel.setBackground(color);
-	            colorPanel.setBorder(new LineBorder(Color.BLACK)); // Agrega un borde negro al panel
+	            colorPanel.setBorder(new LineBorder(Color.BLACK));
 	            colorPanel.setPreferredSize(new Dimension(25, 25)); // Establece el tamaño cuadrado
 	            colorSeleccionadoPanel.add(colorPanel);
 	        }
