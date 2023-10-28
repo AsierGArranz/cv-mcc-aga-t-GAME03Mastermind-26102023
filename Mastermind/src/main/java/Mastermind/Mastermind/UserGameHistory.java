@@ -3,7 +3,7 @@ package Mastermind.Mastermind;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-
+//this generate a new array for the colors the player chose and safe them to show what they chose
 public class UserGameHistory {
     private List<Color[]> allUserColorGuesses;
     private List<Color[]> allUserColorGuessesResult;

@@ -16,7 +16,8 @@ public class SelectDifficultyUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(296, 85);
 		setLocationRelativeTo(null);
-
+		
+		//create the buttons and their position on the scene
 		JPanel panel = new JPanel();
 		JButton beginnerBtn = new JButton("Principiante");
 		beginnerBtn.setBounds(28, 11, 87, 23);
@@ -31,7 +32,8 @@ public class SelectDifficultyUI extends JFrame {
 		panel.add(difficultBtn);
 
 		getContentPane().add(panel);
-
+		
+		//if you press the button they call openUIGame and send the parameters, depending on the option they choose
 		beginnerBtn.addActionListener(executeGameBegginerAl);
 		intermediateBtn.addActionListener(executeGameDifficultAl);
 		difficultBtn.addActionListener(executeGameIntermediateAl);
