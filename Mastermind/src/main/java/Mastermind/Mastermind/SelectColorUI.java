@@ -18,7 +18,7 @@ public class SelectColorUI extends JFrame {
 
 	public SelectColorUI(GameUI gameUI) {
 		this.gameUI = gameUI;
-
+		initialize();
 	}
 
 	private void initialize() {
