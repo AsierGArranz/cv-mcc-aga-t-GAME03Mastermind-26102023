@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class GameUI extends JFrame {
 
-	// env Variables
+	// send Variables
 	private static final long serialVersionUID = 1L;
 	public int totalColors = 4;
 	private boolean sinIntentos = false;
@@ -23,7 +23,7 @@ public class GameUI extends JFrame {
 	private JPanel colorHistoryPanel;
 	private JLabel remainingAttemptsLabel;
 
-	// refactorizado
+	// refactored
 	private CombinationToGuess combinationToGuess;
 	private UserGameHistory selectionHistory;
 
@@ -34,7 +34,8 @@ public class GameUI extends JFrame {
 	public Color[] coloresPersonalizar;
 
 	private boolean colorCustomizacionEnabled = false;
-
+	
+	//when the player selects the difficulty, change the totalColors and totalAttempts, and pick the base colors, then start the new scene
 	public GameUI(int totalColors, int totalAttempts) {
 
 		this.totalColors = totalColors;
@@ -45,19 +46,23 @@ public class GameUI extends JFrame {
 
 		initialize();
 	}
-
+	//create new scene whit the game options we chose on the SelectDifficultyUI
 	private void initialize() {
+		//scene size
 		getContentPane().setLayout(null);
 		setTitle("MasterMind");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(600, 600);
 		setLocationRelativeTo(null);
-
+		
+		//arryas for safe the buttons the player chose 
 		seleccionColores = new JButton[totalColors];
 		userColorGuess = new Color[totalColors];
+		
+		//attempts counter
 		selectedColorIndex = 0;
 		attemptsLeft = totalAttempts;
-
+		
 		remainingAttemptsLabel = new JLabel("Intentos restantes: " + attemptsLeft);
 		remainingAttemptsLabel.setBounds(393, 72, 150, 25);
 		getContentPane().add(remainingAttemptsLabel);
@@ -77,7 +82,8 @@ public class GameUI extends JFrame {
 		getContentPane().add(colorHistoryPanel);
 
 		getContentPane().add(selectedColorPanel);
-
+		
+		//buttons delete, guess, restart
 		JButton deleteBtn = new JButton("Borrar");
 		deleteBtn.setBounds(30 * (totalColors + 1), 10, 80, 25);
 		getContentPane().add(deleteBtn);
@@ -98,17 +104,18 @@ public class GameUI extends JFrame {
 		};
 
 		restartBtn.addActionListener(restartGameActionListener);
-
+		
+		//button for change difficulty
 		JButton returnBtn = new JButton("Seleccionar dificultad");
 		returnBtn.setBounds(383, 10, 160, 25);
 		getContentPane().add(returnBtn);
-
+		//button for change the colors of the game
 		JButton colorCustomizationBtn = new JButton("Personalizar Colores");
 		colorCustomizationBtn.setBounds(383, 46, 160, 25);
 		getContentPane().add(colorCustomizationBtn);
 
 		returnBtn.addActionListener(returnToDifficultyUIActionListener);
-
+		
 		ActionListener colorCustomizationActionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (colorCustomizacionEnabled) {
@@ -145,7 +152,7 @@ public class GameUI extends JFrame {
 				}
 			}
 		};
-
+		//this create the total of buttons the player can chose
 		for (int i = 0; i < totalColors; i++) {
 			JButton btnNewButton = new JButton();
 			btnNewButton.setBounds(30 * (i + 1), 10, 25, 25);
@@ -158,7 +165,7 @@ public class GameUI extends JFrame {
 			btnNewButton.addActionListener(btnNewButtonAl);
 		}
 		combinationToGuess = new CombinationToGuess(coloresPersonalizar);
-
+		//select players buttons and check if they guess
 		ActionListener guessBtnActionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (selectedColorIndex < totalColors) {
@@ -208,7 +215,7 @@ public class GameUI extends JFrame {
 			returnToDifficultyUI();
 		}
 	};
-
+	//print historial
 	private void printHistorial() {
 		// TODO: cambiar nombre esto
 		JPanel historialPanel = new JPanel();
@@ -216,7 +223,7 @@ public class GameUI extends JFrame {
 
 		JPanel historialColores = new JPanel();
 		historialColores.setLayout(new BoxLayout(historialColores, BoxLayout.Y_AXIS));
-
+		//this print on the bottom left the players choses
 		for (Color[] seleccion : selectionHistory.getAllUserColorGuesses()) {
 			JPanel colorPanel = new JPanel();
 			colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.X_AXIS));
@@ -239,7 +246,7 @@ public class GameUI extends JFrame {
 
 		JPanel blackAndWhiteColors = new JPanel();
 		blackAndWhiteColors.setLayout(new BoxLayout(blackAndWhiteColors, BoxLayout.Y_AXIS));
-
+		//this prints the program tracks right to the users history
 		for (Color[] result : selectionHistory.getAllUserColorGuessesResult()) {
 			JPanel colorPanel = new JPanel();
 			colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.X_AXIS));
@@ -266,7 +273,7 @@ public class GameUI extends JFrame {
 		colorHistoryPanel.removeAll();
 		colorHistoryPanel.add(historialPanel);
 	}
-
+	//update the player new colors for the game
 	private void updateSelectedColorLabel() {
 		selectedColorPanel.removeAll();
 
@@ -283,7 +290,7 @@ public class GameUI extends JFrame {
 		selectedColorPanel.revalidate();
 		selectedColorPanel.repaint();
 	}
-
+	//base colors for buttons player
 	private Color getColor(int index) {
 		switch (index) {
 		case 1:
@@ -312,16 +319,17 @@ public class GameUI extends JFrame {
 			return Color.GRAY;
 		}
 	}
-
+	//checks what the player chose and check whit the game colors have
 	private void checkUserAnswer() {
 		Color[] combinationToGuessColors = combinationToGuess.getCombinacion();
 		Color[] userColorGuessResult = new Color[totalColors];
-
+		
+		//if the color is in the game and the same spot > black
 		for (int i = 0; i < totalColors; i++) {
 			if (userColorGuess[i].equals(combinationToGuessColors[i])) {
 				userColorGuessResult[i] = Color.BLACK;
 			}
-
+			//if the color is in the game but different spot > white
 			if (userColorGuessResult[i] == null) {
 				for (int j = 0; j < totalColors; j++) {
 					if (i != j && userColorGuess[i].equals(combinationToGuessColors[j])) {
@@ -330,7 +338,7 @@ public class GameUI extends JFrame {
 					}
 				}
 			}
-
+			//if the color isn't in the game > gray
 			if (userColorGuessResult[i] == null) {
 				userColorGuessResult[i] = Color.GRAY;
 			}
@@ -338,13 +346,13 @@ public class GameUI extends JFrame {
 
 		selectionHistory.add(Arrays.copyOf(userColorGuess, userColorGuess.length), userColorGuessResult);
 	}
-
+	// this returns to the scene selectDifficultyUI and close GmeUI scene
 	private void returnToDifficultyUI() {
 		SelectDifficultyUI selectDifficultyUI = new SelectDifficultyUI();
 		selectDifficultyUI.setVisible(true);
 		dispose();
 	}
-
+	// new select for game colors button
 	private void openSelectColorUI() {
 		SelectColorUI selectColorUI = new SelectColorUI(this);
 		selectColorUI.setVisible(true);
@@ -356,7 +364,7 @@ public class GameUI extends JFrame {
 		}
 		combinationToGuess = new CombinationToGuess(coloresPersonalizar);
 	}
-
+	// this restart the game, but whit the same difficulty, don't change the scene to SelectDifficultyUI
 	private void restartGame() {
 		selectedColorIndex = 0;
 		attemptsLeft = totalAttempts;
