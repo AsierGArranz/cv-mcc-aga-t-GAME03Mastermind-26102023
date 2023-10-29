@@ -5,6 +5,7 @@ package Mastermind.Mastermind;
  */
 public class App {
 	public static void main(String[] args) {
+		//call SelectDifficultyUI and start the game
 		SelectDifficultyUI frame = new SelectDifficultyUI();
 		frame.setVisible(true);
 	}

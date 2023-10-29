@@ -10,7 +10,7 @@ import javax.swing.*;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JPanel;
-
+//this show the player a panel whit all the colors and let them change if they want, do not close the GameUI scene meanwile
 public class SelectColorUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private List<JButton> customizedButtons;
@@ -18,7 +18,7 @@ public class SelectColorUI extends JFrame {
 
 	public SelectColorUI(GameUI gameUI) {
 		this.gameUI = gameUI;
-
+		initialize();
 	}
 
 	private void initialize() {
