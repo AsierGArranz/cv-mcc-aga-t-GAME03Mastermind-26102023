@@ -1,6 +1,8 @@
 package Mastermind.Mastermind;
 
 import javax.swing.*;
+
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,17 +16,17 @@ public class SelectDifficultyUI extends JFrame {
 	private void initialize() {
 		setTitle("Seleccionar Dificultad");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(296, 85);
+		setSize(338, 151);
 		setLocationRelativeTo(null);
 		
 		//create the buttons and their position on the scene
 		JPanel panel = new JPanel();
 		JButton beginnerBtn = new JButton("Principiante");
-		beginnerBtn.setBounds(28, 11, 87, 23);
+		beginnerBtn.setBounds(10, 78, 104, 23);
 		JButton intermediateBtn = new JButton("Medio");
-		intermediateBtn.setBounds(120, 11, 61, 23);
+		intermediateBtn.setBounds(124, 78, 81, 23);
 		JButton difficultBtn = new JButton("Difícil");
-		difficultBtn.setBounds(186, 11, 57, 23);
+		difficultBtn.setBounds(215, 78, 97, 23);
 		panel.setLayout(null);
 
 		panel.add(beginnerBtn);
@@ -32,6 +34,11 @@ public class SelectDifficultyUI extends JFrame {
 		panel.add(difficultBtn);
 
 		getContentPane().add(panel);
+		
+		JLabel lblNewLabel = new JLabel("Master  Mind");
+        lblNewLabel.setFont(new Font("Georgia", Font.PLAIN, 30));
+        lblNewLabel.setBounds(67, 11, 194, 36);
+        panel.add(lblNewLabel);
 		
 		//if you press the button they call openUIGame and send the parameters, depending on the option they choose
 		beginnerBtn.addActionListener(executeGameBegginerAl);
