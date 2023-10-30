@@ -17,10 +17,10 @@ class CombinationToGuess {
     }
 
     private Color[] generarCombinacion(int totalColors) {
-        Color[] combinationToGuess = new Color[totalColors];
+        Color[] combinationToGuess = new Color[4];
         Random random = new Random();
 
-        for (int i = 0; i < totalColors; i++) {
+        for (int i = 0; i < 4; i++) {
             int colorIndex = random.nextInt(totalColors);
             combinationToGuess[i] = avariableColors[colorIndex]; 
         }
