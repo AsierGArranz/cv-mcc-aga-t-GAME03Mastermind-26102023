@@ -26,6 +26,8 @@ public class SelectColorUI extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setSize(400, 200);
 		setLayout(new GridLayout(0, 2));
+		setLocationRelativeTo(null);
+
 
 		customizedButtons = new ArrayList<>();
 		for (int i = 0; i < gameUI.totalColors; i++) {
