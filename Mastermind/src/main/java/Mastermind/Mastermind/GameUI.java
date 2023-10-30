@@ -7,6 +7,7 @@ import java.awt.event.*;
 import java.util.Arrays;
 
 public class GameUI extends JFrame {
+	private final int COMBINATION_LENGTH = 4;
 
 	// send Variables
 	private static final long serialVersionUID = 1L;
@@ -133,7 +134,7 @@ public class GameUI extends JFrame {
 
 		ActionListener clearUserColorCombinationActionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				userColorGuess = new Color[totalColors];
+				userColorGuess = new Color[COMBINATION_LENGTH];
 				selectedColorIndex = 0;
 				updateSelectedColorLabel();
 			}
@@ -143,7 +144,7 @@ public class GameUI extends JFrame {
 
 		ActionListener btnNewButtonAl = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (selectedColorIndex < totalColors) {
+				if (selectedColorIndex < COMBINATION_LENGTH) {
 					JButton pressedBtn = (JButton) e.getSource();
 					Color btnsColor = pressedBtn.getBackground();
 					userColorGuess[selectedColorIndex] = btnsColor;
@@ -168,7 +169,7 @@ public class GameUI extends JFrame {
 		//select players buttons and check if they guess
 		ActionListener guessBtnActionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (selectedColorIndex < totalColors) {
+				if (selectedColorIndex < COMBINATION_LENGTH) {
 					JOptionPane.showMessageDialog(null, "Completa la selección de colores antes de adivinar.", "Error",
 							JOptionPane.ERROR_MESSAGE);
 					return;
@@ -176,7 +177,6 @@ public class GameUI extends JFrame {
 
 				if (!sinIntentos) {
 					checkUserAnswer();
-
 					if (Arrays.equals(userColorGuess, combinationToGuess.getCombinacion())) {
 						JOptionPane.showMessageDialog(null, "¡Has adivinado la combinación!", "¡Felicidades!",
 								JOptionPane.INFORMATION_MESSAGE);
@@ -199,7 +199,7 @@ public class GameUI extends JFrame {
 					remainingAttemptsLabel.setText("Intentos restantes: " + attemptsLeft);
 					printHistorial();
 
-					userColorGuess = new Color[totalColors];
+					userColorGuess = new Color[COMBINATION_LENGTH];
 					selectedColorIndex = 0;
 					updateSelectedColorLabel();
 				}
@@ -217,7 +217,6 @@ public class GameUI extends JFrame {
 	};
 	//print historial
 	private void printHistorial() {
-		// TODO: cambiar nombre esto
 		JPanel historialPanel = new JPanel();
 		historialPanel.setLayout(new BoxLayout(historialPanel, BoxLayout.X_AXIS));
 
@@ -322,16 +321,16 @@ public class GameUI extends JFrame {
 	//checks what the player chose and check whit the game colors have
 	private void checkUserAnswer() {
 		Color[] combinationToGuessColors = combinationToGuess.getCombinacion();
-		Color[] userColorGuessResult = new Color[totalColors];
+		Color[] userColorGuessResult = new Color[COMBINATION_LENGTH];
 		
 		//if the color is in the game and the same spot > black
-		for (int i = 0; i < totalColors; i++) {
+		for (int i = 0; i < COMBINATION_LENGTH; i++) {
 			if (userColorGuess[i].equals(combinationToGuessColors[i])) {
 				userColorGuessResult[i] = Color.BLACK;
 			}
 			//if the color is in the game but different spot > white
 			if (userColorGuessResult[i] == null) {
-				for (int j = 0; j < totalColors; j++) {
+				for (int j = 0; j < COMBINATION_LENGTH; j++) {
 					if (i != j && userColorGuess[i].equals(combinationToGuessColors[j])) {
 						userColorGuessResult[i] = Color.WHITE;
 						break;
